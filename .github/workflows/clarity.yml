@@ -6,11 +6,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - name: Install Clarinet
-        run: |
-          wget -nv https://github.com/hirosystems/clarinet/releases/download/v2.11.0/clarinet-linux-x64-glibc.tar.gz
-          tar -xf clarinet-linux-x64-glibc.tar.gz
-          sudo mv clarinet /usr/local/bin/
+      - name: Setup Clarinet
+        uses: hirosystems/setup-clarinet@v1
+        with:
+          clarinet-version: '2.11.0'
       - name: Clarinet Check
         run: |
           cd contract
