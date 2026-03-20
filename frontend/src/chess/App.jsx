@@ -13,6 +13,7 @@ import Popup from './components/Popup/Popup';
 import StakingModal from './components/Popup/StakingModal/StakingModal';
 import { getStakeData } from './helper/stakeStorage';
 import ConnectWallet from './components/Control/bits/ConnectWallet';
+import { useUser } from './contexts/UserContext';
 
 // Leaderboard Component
 const Leaderboard = ({ results, onClear }) => {
@@ -134,12 +135,21 @@ function App() {
         }
     }, [appState.status, dispatch]);
 
+    const { isSignedIn } = useUser();
+
     return (
         <AppContext.Provider value={providerState} >
             <div className="App">
                 <div className="game-area">
                     <div className="game-mode-selection">
-                        <button className="btn btn-secondary" onClick={() => setShowStakingModal(true)} disabled={gameMode === 'pvp'}>Player vs Player</button>
+                        <button 
+                            className="btn btn-secondary" 
+                            onClick={() => setShowStakingModal(true)} 
+                            disabled={gameMode === 'pvp' || !isSignedIn}
+                            title={!isSignedIn ? "Connect wallet to play PvP" : ""}
+                        >
+                            Player vs Player
+                        </button>
                         <button className="btn btn-secondary" onClick={handlePlayerVsComputer} disabled={gameMode === 'pvc'}>Player vs Computer</button>
                         <button className="btn" onClick={() => handleNewGame(gameMode)}>New Game</button>
                     </div>
