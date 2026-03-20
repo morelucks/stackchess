@@ -47,6 +47,27 @@ const stacksService = {
       onCancel,
     });
   },
+
+  /**
+   * Joins an existing game on-chain
+   * @param {number} gameId - The ID of the game to join
+   * @param {Object} callbacks - onFinish and onCancel callbacks
+   */
+  joinGame: (gameId, onFinish, onCancel) => {
+    const [contractAddress, contractName] = CONTRACTS.GAME.split('.');
+    
+    openContractCall({
+      contractAddress,
+      contractName,
+      functionName: 'join-game',
+      functionArgs: [uintCV(gameId)],
+      network,
+      anchorMode: AnchorMode.Any,
+      postConditionMode: PostConditionMode.Allow,
+      onFinish,
+      onCancel,
+    });
+  },
 };
 
 export default stacksService;
