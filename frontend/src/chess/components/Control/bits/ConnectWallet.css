@@ -45,3 +45,20 @@
 .btn-full {
     width: 100%;
 }
+
+.powered-by {
+    font-size: 0.75rem;
+    color: rgba(255, 255, 255, 0.4);
+    text-align: center;
+    margin-top: 0.5rem;
+}
+
+.powered-by a {
+    color: #5546ff;
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.powered-by a:hover {
+    text-decoration: underline;
+}

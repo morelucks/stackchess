@@ -35,7 +35,6 @@ const ConnectWallet = () => {
         );
     }
 
-    return (
         <div className="connect-wallet">
             <button 
                 className={`btn btn-primary btn-full ${isConnecting ? 'disabled' : ''}`} 
@@ -44,8 +43,10 @@ const ConnectWallet = () => {
             >
                 {isConnecting ? 'Opening Wallet...' : 'Connect Stacks Wallet'}
             </button>
+            <div className="powered-by">
+                Powered by <a href="https://stacks.co" target="_blank" rel="noopener noreferrer">Stacks</a>
+            </div>
         </div>
-    );
 };
 
 export default ConnectWallet;
