@@ -6,6 +6,13 @@ import { NETWORK, CONTRACTS } from '../stacksConstants';
 const network = NETWORK === 'mainnet' ? new StacksMainnet() : new StacksTestnet();
 
 /**
+ * Helper to split a fully-qualified contract address into parts
+ * @param {string} contract - The contract string (e.g. "SP34...GAME")
+ * @returns {[string, string]} [address, name]
+ */
+const getContractParts = (contract) => contract.split('.');
+
+/**
  * Service to handle all Stacks blockchain interactions
  */
 const stacksService = {
@@ -33,7 +40,7 @@ const stacksService = {
    * @param {Object} callbacks - onFinish and onCancel callbacks
    */
   createGame: (wager, isStx, onFinish, onCancel) => {
-    const [contractAddress, contractName] = CONTRACTS.GAME.split('.');
+    const [contractAddress, contractName] = getContractParts(CONTRACTS.GAME);
     
     openContractCall({
       contractAddress,
@@ -54,7 +61,7 @@ const stacksService = {
    * @param {Object} callbacks - onFinish and onCancel callbacks
    */
   joinGame: (gameId, onFinish, onCancel) => {
-    const [contractAddress, contractName] = CONTRACTS.GAME.split('.');
+    const [contractAddress, contractName] = getContractParts(CONTRACTS.GAME);
     
     openContractCall({
       contractAddress,
@@ -77,7 +84,7 @@ const stacksService = {
    * @param {Object} callbacks - onFinish and onCancel callbacks
    */
   submitMove: (gameId, moveStr, boardState, onFinish, onCancel) => {
-    const [contractAddress, contractName] = CONTRACTS.GAME.split('.');
+    const [contractAddress, contractName] = getContractParts(CONTRACTS.GAME);
     
     openContractCall({
       contractAddress,
@@ -102,7 +109,7 @@ const stacksService = {
    * @returns {Promise<Object>} The game state object
    */
   getGameState: async (gameId) => {
-    const [contractAddress, contractName] = CONTRACTS.GAME.split('.');
+    const [contractAddress, contractName] = getContractParts(CONTRACTS.GAME);
     
     try {
       const response = await callReadOnlyFunction({
