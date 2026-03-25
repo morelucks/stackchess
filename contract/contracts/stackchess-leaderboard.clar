@@ -83,8 +83,8 @@
 ;; Initializes a new player entry with default stats if they don't exist yet
 (define-private (ensure-player-exists (player principal))
     (match (map-get? player-stats { player: player })
-        _existing true  ;; already exists, no-op
-        ;; New player — register with defaults
+        existing-stats true  ;; already exists, no-op
+        ;; New player - register with defaults
         (begin
             (map-set player-stats { player: player }
                 {
