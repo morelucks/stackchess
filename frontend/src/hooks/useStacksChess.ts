@@ -8,12 +8,14 @@ import {
 } from '@stacks/transactions';
 import { STACKS_MAINNET } from '@stacks/network';
 import useAppStore from '../zustand/store';
+import { useToaster } from '../components/ui/toasts/ToasterProvider';
 
 const CONTRACT_ADDRESS = 'SP34MN3DMM07BNAWYJSHTS4B08T8JRVK8AT810X1B';
 const CONTRACT_NAME = 'stackchess';
 
 export const useStacksChess = () => {
   const address = useAppStore((state) => state.address);
+  const { addToast } = useToaster();
   const network = STACKS_MAINNET;
 
   const createGame = async (wager: number, isStxMode: boolean) => {
@@ -35,6 +37,11 @@ export const useStacksChess = () => {
       postConditions,
       network,
       onFinish: (data) => {
+        addToast({
+          txId: data.txId,
+          status: 'success',
+          message: 'Game creation transaction broadcasted'
+        });
         console.log('Transaction broadcasted:', data.txId);
       },
     });
