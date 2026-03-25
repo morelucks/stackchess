@@ -5,7 +5,8 @@ import {
   stringAsciiCV, 
   PostConditionMode,
   FungibleConditionCode,
-  makeStandardSTXPostCondition
+  createSTXPostCondition,
+  createStandardPrincipal
 } from '@stacks/transactions';
 import { STACKS_MAINNET } from '@stacks/network';
 import useAppStore from '../zustand/store';
