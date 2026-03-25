@@ -1,56 +1,79 @@
-import DojoLogo from "../assets/DojoByExample_logo.svg";
-import DojoRedLogo from "../assets/Dojo-Logo-Stylized-Red.svg";
-import StarknetLogo from "../assets/SN-Linear-Gradient.svg";
+import { useConnect, showConnect } from "@stacks/connect-react";
+import { Wallet, LogOut, User } from "lucide-react";
 
 export function Header() {
+  const { signout } = useConnect();
+
+  // We can get the user data from session, but for now let's just use the connection flow
+  // We'll update this once we have the Zustand store refined
+  const isAuthenticated = false; // Placeholder for now
+  const userAddress = ""; // Placeholder
+
+  const handleConnect = () => {
+    showConnect({
+      appDetails: {
+        name: "Stackchess",
+        icon: window.location.origin + "/logo.png",
+      },
+      onFinish: () => {
+        window.location.reload();
+      },
+    });
+  };
+
   return (
-    <div className="text-center mb-12">
-      <div className="flex items-center justify-center gap-12">
-        {/* Dojo Engine Logo */}
-        <div className="w-32 h-32 flex items-center justify-center p-2 hover:scale-105 transition-transform duration-300">
-          <img
-            src={DojoRedLogo}
-            alt="Dojo"
-            className="w-full h-full object-contain filter drop-shadow-lg"
-          />
-        </div>
+    <div className="flex flex-col items-center justify-center p-6 md:p-10 text-center relative">
+      {/* Wallet Connection - Top Right */}
+      <div className="absolute top-4 right-4 md:top-8 md:right-8">
+        {!isAuthenticated ? (
+          <button
+            onClick={handleConnect}
+            className="flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-full font-semibold transition-all shadow-lg hover:shadow-blue-500/20 active:scale-95"
+          >
+            <Wallet size={18} />
+            <span>Connect Wallet</span>
+          </button>
+        ) : (
+          <div className="flex items-center gap-3">
+            <div className="flex flex-col items-end hidden md:flex">
+              <span className="text-sm font-bold text-white">Connected</span>
+              <span className="text-xs text-slate-400 font-mono">
+                {userAddress.slice(0, 6)}...{userAddress.slice(-4)}
+              </span>
+            </div>
+            <button
+              onClick={() => signout()}
+              className="p-2 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-full transition-colors border border-slate-700"
+              title="Disconnect"
+            >
+              <LogOut size={18} />
+            </button>
+          </div>
+        )}
+      </div>
 
-        {/* Dojo By Example Logo*/}
-        <div className="w-40 h-40 flex items-center justify-center hover:scale-105 transition-transform duration-500">
-          <img
-            src={DojoLogo}
-            alt="Dojo By Example Logo"
-            className="w-full h-full object-contain filter drop-shadow-2xl"
-          />
-        </div>
-
-        {/* Starknet Logo */}
-        <div className="w-40 h-40 flex items-center justify-center p-2 hover:scale-105 transition-transform duration-300">
-          <img
-            src={StarknetLogo}
-            alt="Starknet"
-            className="w-full h-full object-contain filter drop-shadow-lg"
-          />
+      <div className="mb-6 flex items-center justify-center">
+        <div className="w-24 h-24 md:w-32 md:h-32 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-2xl flex items-center justify-center shadow-2xl rotate-3 hover:rotate-0 transition-transform duration-500">
+          <span className="text-5xl md:text-6xl">♟️</span>
         </div>
       </div>
 
       <h1
         className="
-          text-3xl md:text-5xl 
-          font-bold mb-2 py-2
-          bg-gradient-to-r from-red-500 via-white to-blue-600 
+          text-4xl md:text-6xl 
+          font-black mb-4 py-2
+          bg-gradient-to-r from-blue-400 via-indigo-300 to-blue-500 
           bg-clip-text text-transparent 
-          leading-normal
+          leading-tight tracking-tight
         "
       >
-        Dojo Game Starter
+        Stackchess
       </h1>
-      <p className="text-lg md:text-xl text-slate-300 max-w-2xl mx-auto px-4">
-        Complete onchain gaming template for{" "}
-        <span className="text-transparent bg-clip-text bg-gradient-to-r from-red-400 to-blue-400 font-semibold">
-          Starknet
-        </span>{" "}
-        ecosystem
+      <p className="text-lg md:text-xl text-slate-400 max-w-2xl mx-auto px-4 font-medium">
+        Onchain Chess with STX Wagers on{" "}
+        <span className="text-transparent bg-clip-text bg-gradient-to-r from-orange-400 to-orange-600 font-bold">
+          Stacks
+        </span>
       </p>
     </div>
   );
