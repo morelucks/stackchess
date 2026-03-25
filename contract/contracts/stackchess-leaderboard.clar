@@ -226,3 +226,22 @@
     )
 )
 
+;; ===========================
+;; Admin Functions
+;; ===========================
+
+;; Allows the contract owner to pre-seed or correct a player's ELO
+(define-public (admin-set-elo (player principal) (new-elo uint))
+    (let (
+        (inited (ensure-player-exists player))
+        (stats (unwrap! (map-get? player-stats { player: player }) err-player-not-found))
+    )
+        (asserts! (is-eq contract-caller contract-owner) err-not-authorized)
+        
+        (map-set player-stats { player: player }
+            (merge stats { elo: new-elo })
+        )
+        (ok true)
+    )
+)
+
