@@ -1,4 +1,5 @@
 import { usePlayerStats } from '../chess/hooks/useLeaderboard';
+import StreakBadge from './StreakBadge';
 import './PlayerEloCard.css';
 
 interface Props {
@@ -25,6 +26,7 @@ export default function PlayerEloCard({ address }: Props) {
           <span className="elo-card__draw">{String(stats['draws'] ?? 0)}D</span>
         </div>
       )}
+      <StreakBadge address={address} />
     </div>
   );
 }
