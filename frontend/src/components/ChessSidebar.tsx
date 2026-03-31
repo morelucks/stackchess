@@ -176,6 +176,10 @@ export default function ChessSidebar() {
     const address = useAppStore((s) => s.address);
     const activeGameId = useAppStore((s) => s.activeGameId);
     const { gameState } = useGameState(activeGameId);
+    const currentGameStatus =
+        gameState && typeof gameState === 'object' && 'status' in gameState
+            ? Number((gameState as { status: number | string }).status)
+            : null;
     const [leaderboardResults, setLeaderboardResults] = useState([]);
     const [showStakingModal, setShowStakingModal] = useState(false);
     const [activeTab, setActiveTab] = useState<'controls' | 'leaderboard'>('controls');
@@ -245,9 +249,9 @@ export default function ChessSidebar() {
                 <>
                     {address && <PlayerEloCard address={address} />}
                     <GameStatusBanner
-                        status={gameState ? Number(gameState.status) : null}
+                        status={currentGameStatus}
                         gameId={activeGameId}
-                    />}
+                    />
                     <GameModeSelection 
                         gameMode={gameMode}
                         onNewGame={handleNewGame}
