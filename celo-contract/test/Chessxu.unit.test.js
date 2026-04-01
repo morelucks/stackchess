@@ -415,3 +415,5 @@ describe("Chessxu – Unit Tests", function () {
 // test: nextGameId initialisation verified
 
 // test: token address stored on deploy
+
+// test: zero-address token deploy
