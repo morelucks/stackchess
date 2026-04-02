@@ -52,3 +52,9 @@ contract StackChess {
             if (wager > 0) {
                 if (msg.value != wager) revert InvalidWager();
             }
+        } else {
+            if (msg.value > 0) revert InvalidWager();
+            if (wager > 0) {
+                bool success = stackchessToken.transferFrom(msg.sender, address(this), wager);
+                if (!success) revert TransferFailed();
+            }
