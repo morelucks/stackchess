@@ -82,3 +82,9 @@ contract StackChess {
 
         if (game.isNative) {
             if (game.wager > 0) {
+                if (msg.value != game.wager) revert InvalidWager();
+            }
+        } else {
+            if (msg.value > 0) revert InvalidWager();
+            if (game.wager > 0) {
+                bool success = stackchessToken.transferFrom(msg.sender, address(this), game.wager);
