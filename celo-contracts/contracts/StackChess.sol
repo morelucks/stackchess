@@ -64,3 +64,9 @@ contract StackChess {
             playerW: msg.sender,
             playerB: address(0),
             wager: wager,
+            isNative: isNative,
+            boardState: "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR",
+            turn: "w",
+            status: 0
+        });
+
