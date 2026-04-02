@@ -94,3 +94,9 @@ contract StackChess {
 
         game.playerB = msg.sender;
         game.status = 1;
+    }
+
+    function submitMove(uint256 gameId, string calldata /* moveStr */, string calldata newBoardState) external {
+        Game storage game = games[gameId];
+        if (game.playerW == address(0)) revert GameNotFound();
+        if (game.status != 1) revert GameNotActive();
