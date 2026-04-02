@@ -118,3 +118,9 @@ contract StackChess {
 
     function resign(uint256 gameId) external {
         Game storage game = games[gameId];
+        if (game.playerW == address(0)) revert GameNotFound();
+        if (game.status != 1) revert GameNotActive();
+        if (msg.sender != game.playerW && msg.sender != game.playerB) revert NotPlayer();
+
+        uint256 prize = game.wager * 2;
+
