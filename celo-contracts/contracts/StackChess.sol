@@ -178,3 +178,9 @@ contract StackChess {
                     bool success = stackchessToken.transfer(game.playerB, prize);
                     if (!success) revert TransferFailed();
                 }
+            }
+        } else {
+            // Draw or Cancel - Refund wagers
+            if (game.isNative) {
+                if (wager > 0) {
+                    payable(game.playerW).transfer(wager);
