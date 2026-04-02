@@ -16,3 +16,9 @@ contract StackChess {
         address playerB;
         uint256 wager;
         bool isNative;
+        string boardState;
+        string turn; // "w" or "b"
+        uint8 status; // 0 = Waiting, 1 = Ongoing, 2 = White Wins, 3 = Black Wins, 4 = Draw, 5 = Cancelled
+    }
+
+    mapping(uint256 => Game) public games;
