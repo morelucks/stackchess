@@ -208,3 +208,7 @@ contract StackChess {
         return games[gameId];
     }
 
+    function getLastGameId() external view returns (uint256) {
+        return nextGameId - 1;
+    }
+}
