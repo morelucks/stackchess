@@ -46,3 +46,9 @@ contract StackChess {
     }
 
     function createGame(uint256 wager, bool isNative) external payable returns (uint256) {
+        uint256 gameId = nextGameId;
+
+        if (isNative) {
+            if (wager > 0) {
+                if (msg.value != wager) revert InvalidWager();
+            }
