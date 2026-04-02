@@ -40,3 +40,9 @@ contract StackChess {
 
     constructor(address _tokenAddress) {
         owner = msg.sender;
+        if (_tokenAddress != address(0)) {
+            stackchessToken = IERC20(_tokenAddress);
+        }
+    }
+
+    function createGame(uint256 wager, bool isNative) external payable returns (uint256) {
