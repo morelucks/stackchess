@@ -70,3 +70,9 @@ contract StackChess {
             status: 0
         });
 
+        nextGameId = gameId + 1;
+        return gameId;
+    }
+
+    function joinGame(uint256 gameId) external payable {
+        Game storage game = games[gameId];
