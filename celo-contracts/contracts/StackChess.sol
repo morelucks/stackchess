@@ -34,3 +34,9 @@ contract StackChess {
     error InvalidWager();
     error NotPlayer();
     error NotYourTurn();
+    error GameNotActive();
+    error InvalidStatus();
+    error TransferFailed();
+
+    constructor(address _tokenAddress) {
+        owner = msg.sender;
