@@ -202,3 +202,9 @@ contract StackChess {
         }
 
         game.status = newStatus;
+    }
+
+    function getGame(uint256 gameId) external view returns (Game memory) {
+        return games[gameId];
+    }
+
