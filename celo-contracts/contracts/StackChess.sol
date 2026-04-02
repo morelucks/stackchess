@@ -130,3 +130,9 @@ contract StackChess {
             if (prize > 0) {
                 if (game.isNative) {
                     payable(game.playerB).transfer(prize);
+                } else {
+                    bool success = stackchessToken.transfer(game.playerB, prize);
+                    if (!success) revert TransferFailed();
+                }
+            }
+        } else {
