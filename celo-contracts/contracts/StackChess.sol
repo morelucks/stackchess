@@ -172,3 +172,9 @@ contract StackChess {
         } else if (newStatus == 3) {
             // Black wins
             if (game.playerB != address(0) && prize > 0) {
+                if (game.isNative) {
+                    payable(game.playerB).transfer(prize);
+                } else {
+                    bool success = stackchessToken.transfer(game.playerB, prize);
+                    if (!success) revert TransferFailed();
+                }
