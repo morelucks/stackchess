@@ -429,3 +429,5 @@ describe("Chessxu – Unit Tests", function () {
 // test: createGame InvalidWager revert
 
 // test: createGame ETH sent for token game revert
+
+// test: createGame token wager holds tokens
