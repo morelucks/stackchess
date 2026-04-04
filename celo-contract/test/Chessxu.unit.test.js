@@ -437,3 +437,5 @@ describe("Chessxu – Unit Tests", function () {
 // test: joinGame sets playerB and status
 
 // test: joinGame GameNotFound revert
+
+// test: joinGame AlreadyJoined revert
