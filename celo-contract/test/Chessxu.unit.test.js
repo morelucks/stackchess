@@ -435,3 +435,5 @@ describe("Chessxu – Unit Tests", function () {
 // test: createGame no allowance revert
 
 // test: joinGame sets playerB and status
+
+// test: joinGame GameNotFound revert
