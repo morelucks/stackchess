@@ -14,6 +14,10 @@ const celoService = {
     transport: http()
   }),
 
+  ERROR_MESSAGES: {
+    WALLET_NOT_FOUND: 'MetaMask or other EVM wallet not found',
+  },
+
   /**
    * Returns the contract address as a type-safe hex string
    */
@@ -105,10 +109,7 @@ const celoService = {
    * @param {number} gameId - The game to resign from
    */
   resign: async (gameId: number) => {
-    const walletClient = createWalletClient({
-      chain: celo,
-      transport: custom((window as any).ethereum)
-    });
+    const walletClient = celoService.getWalletClient();
     const [address] = await walletClient.requestAddresses();
 
     return await walletClient.writeContract({
