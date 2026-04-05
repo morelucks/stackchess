@@ -443,3 +443,5 @@ describe("Chessxu – Unit Tests", function () {
 // test: submitMove turn alternation
 
 // test: submitMove NotYourTurn revert
+
+// test: resign payout and status
