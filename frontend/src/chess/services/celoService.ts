@@ -205,6 +205,15 @@ const celoService = {
   },
 
   /**
+   * Returns the wager amount for a specific game
+   * @param {number} gameId - The game ID
+   */
+  getWager: async (gameId: number) => {
+    const game = await celoService.getGame(gameId) as any;
+    return game.wager;
+  },
+
+  /**
    * Returns the native CELO balance of an address
    * @param {string} address - The wallet address
    */
