@@ -19,8 +19,9 @@ const celoService = {
     
     const walletClient = createWalletClient({
       chain: celo,
-      transport: custom(window.ethereum)
+      transport: custom((window as any).ethereum)
     });
+
     
     const [address] = await walletClient.requestAddresses();
     return address;
@@ -34,8 +35,9 @@ const celoService = {
   createGame: async (wagerInEth: string, isNative: boolean) => {
     const walletClient = createWalletClient({
       chain: celo,
-      transport: custom(window.ethereum!)
+      transport: custom((window as any).ethereum)
     });
+
     const [address] = await walletClient.requestAddresses();
     
     return await walletClient.writeContract({
