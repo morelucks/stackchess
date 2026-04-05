@@ -123,12 +123,7 @@ const celoService = {
    * @param {number} gameId - The ID of the game to fetch
    */
   getGame: async (gameId: number) => {
-    const publicClient = createPublicClient({
-      chain: celo,
-      transport: http()
-    });
-
-    return await publicClient.readContract({
+    return await celoService.publicClient.readContract({
       address: CELO_CONFIG.CONTRACT_ADDRESS as `0x${string}`,
       abi: CHESSXU_ABI,
       functionName: 'getGame',
