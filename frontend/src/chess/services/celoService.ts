@@ -56,6 +56,28 @@ const celoService = {
    * @param {boolean} isNative - Whether the wager is in native CELO
    */
   joinGame: async (gameId: number, wagerInEth: string, isNative: boolean) => {
+    const walletClient = createWalletClient({
+      chain: celo,
+      transport: custom((window as any).ethereum)
+    });
+    const [address] = await walletClient.requestAddresses();
+
+    return await walletClient.writeContract({
+      address: CELO_CONFIG.CONTRACT_ADDRESS as `0x${string}`,
+      abi: CHESSXU_ABI,
+      functionName: 'joinGame',
+      args: [BigInt(gameId)],
+      account: address,
+      value: isNative ? parseEther(wagerInEth) : 0n,
+    });
+  },
+
+  /**
+   * Submits a move to the on-chain game
+   * @param {number} gameId - The ID of the game
+   * @param {string} boardState - The resulting board state (FEN)
+   */
+  submitMove: async (gameId: number, boardState: string) => {
     // Implementation pending
   },
 };
