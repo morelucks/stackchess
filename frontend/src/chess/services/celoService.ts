@@ -20,20 +20,25 @@ const celoService = {
   getContractAddress: () => {
     return CELO_CONFIG.CONTRACT_ADDRESS as `0x${string}`;
   },
+
+  /**
+   * Returns a wallet client for write operations
+   */
+  getWalletClient: () => {
+    if (!window.ethereum) {
+      throw new Error('MetaMask or other EVM wallet not found');
+    }
+    return createWalletClient({
+      chain: celo,
+      transport: custom((window as any).ethereum)
+    });
+  },
   
   /**
    * Connects to the Celo wallet
    */
   connectWallet: async () => {
-    if (!window.ethereum) {
-      throw new Error('MetaMask or other EVM wallet not found');
-    }
-    
-    const walletClient = createWalletClient({
-      chain: celo,
-      transport: custom((window as any).ethereum)
-    });
-
+    const walletClient = celoService.getWalletClient();
     const [address] = await walletClient.requestAddresses();
     return address;
   },
@@ -44,11 +49,7 @@ const celoService = {
    * @param {boolean} isNative - Whether the wager is in native CELO or token
    */
   createGame: async (wagerInEth: string, isNative: boolean) => {
-    const walletClient = createWalletClient({
-      chain: celo,
-      transport: custom((window as any).ethereum)
-    });
-
+    const walletClient = celoService.getWalletClient();
     const [address] = await walletClient.requestAddresses();
     
     return await walletClient.writeContract({
