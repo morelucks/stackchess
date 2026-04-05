@@ -78,6 +78,26 @@ const celoService = {
    * @param {string} boardState - The resulting board state (FEN)
    */
   submitMove: async (gameId: number, boardState: string) => {
+    const walletClient = createWalletClient({
+      chain: celo,
+      transport: custom((window as any).ethereum)
+    });
+    const [address] = await walletClient.requestAddresses();
+
+    return await walletClient.writeContract({
+      address: CELO_CONFIG.CONTRACT_ADDRESS as `0x${string}`,
+      abi: CHESSXU_ABI,
+      functionName: 'submitMove',
+      args: [BigInt(gameId), "", boardState],
+      account: address,
+    });
+  },
+
+  /**
+   * Resigns from an active game
+   * @param {number} gameId - The game to resign from
+   */
+  resign: async (gameId: number) => {
     // Implementation pending
   },
 };
