@@ -30,7 +30,7 @@ const celoService = {
    */
   getWalletClient: () => {
     if (!window.ethereum) {
-      throw new Error('MetaMask or other EVM wallet not found');
+      throw new Error(celoService.ERROR_MESSAGES.WALLET_NOT_FOUND);
     }
     return createWalletClient({
       chain: celo,
