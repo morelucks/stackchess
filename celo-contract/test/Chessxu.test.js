@@ -50,6 +50,32 @@ describe("Chessxu Contract", function () {
       const contractBalance = await ethers.provider.getBalance(await chessxu.getAddress());
       expect(contractBalance).to.equal(wager);
     });
+
+    it("Should assign correct game struct values upon creation", async function () {
+      const { chessxu, player1 } = await deployChessxuFixture();
+      await chessxu.connect(player1).createGame(0, true);
+      
+      const game = await chessxu.getGame(1);
+      expect(game.playerW).to.equal(player1.address);
+      expect(game.playerB).to.equal(ethers.ZeroAddress);
+      expect(game.wager).to.equal(0);
+      expect(game.isNative).to.be.true;
+      expect(game.boardState).to.equal("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR");
+      expect(game.turn).to.equal("w");
+      expect(game.status).to.equal(0);
+    });
+
+    it("Should increment nextGameId after creation", async function () {
+      const { chessxu, player1 } = await deployChessxuFixture();
+      
+      expect(await chessxu.nextGameId()).to.equal(1);
+      
+      await chessxu.connect(player1).createGame(0, true);
+      expect(await chessxu.nextGameId()).to.equal(2);
+      
+      await chessxu.connect(player1).createGame(0, true);
+      expect(await chessxu.nextGameId()).to.equal(3);
+    });
   });
 
   describe("joinGame", function () {
