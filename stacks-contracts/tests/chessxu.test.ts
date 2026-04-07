@@ -12,6 +12,17 @@ describe("chessxu - create-game", () => {
         const { result } = simnet.callPublicFn("chessxu", "create-game", [Cl.uint(100), Cl.bool(true)], wallet_1);
         expect(result).toBeOk(Cl.uint(1));
     });
+
+    it("deducts STX wager from creator and locks it in the contract during creation", () => {
+        const wager = 100;
+        const { events } = simnet.callPublicFn("chessxu", "create-game", [Cl.uint(wager), Cl.bool(true)], wallet_1);
+        
+        expect(events.length).toBe(1);
+        const transferEvent = events[0].data;
+        expect(transferEvent.sender).toBe(wallet_1);
+        expect(transferEvent.recipient).toBe(`${deployer}.chessxu`);
+        expect(transferEvent.amount).toBe(`${wager}`);
+    });
 });
 
 
