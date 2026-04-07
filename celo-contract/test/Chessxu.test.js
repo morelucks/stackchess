@@ -203,6 +203,16 @@ describe("Chessxu Contract", function () {
         chessxu.connect(player3).joinGame(1)
       ).to.be.revertedWithCustomError(chessxu, "NotWaiting");
     });
+
+    it("Should revert if creator tries to join own game", async function () {
+      const { chessxu, player1 } = await deployChessxuFixture();
+      
+      await chessxu.connect(player1).createGame(0, true);
+      
+      await expect(
+        chessxu.connect(player1).joinGame(1)
+      ).to.be.revertedWithCustomError(chessxu, "AlreadyJoined");
+    });
   });
 
   describe("submitMove", function () {
