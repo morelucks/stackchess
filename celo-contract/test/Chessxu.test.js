@@ -35,6 +35,21 @@ describe("Chessxu Contract", function () {
       const gameId = await chessxu.getLastGameId();
       expect(gameId).to.equal(1);
     });
+
+    it("Should create a new game with native ETH wager", async function () {
+      const { chessxu, player1, parseEth } = await deployChessxuFixture();
+      
+      const wager = parseEth("0.5");
+      const tx = await chessxu.connect(player1).createGame(wager, true, { value: wager });
+      await tx.wait();
+
+      const gameId = await chessxu.getLastGameId();
+      expect(gameId).to.equal(1);
+      
+      // Verify contract balance is updated
+      const contractBalance = await ethers.provider.getBalance(await chessxu.getAddress());
+      expect(contractBalance).to.equal(wager);
+    });
   });
 
   describe("joinGame", function () {
