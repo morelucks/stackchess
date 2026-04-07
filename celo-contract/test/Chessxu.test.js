@@ -309,5 +309,17 @@ describe("Chessxu Contract", function () {
         chessxu.connect(player1).submitMove(1, "e2-e4", "dummyState")
       ).to.be.revertedWithCustomError(chessxu, "GameNotActive");
     });
+
+    it("Should revert if wrong player moves (not their turn/not in game)", async function () {
+      const { chessxu, player1, player2 } = await deployChessxuFixture();
+      
+      await chessxu.connect(player1).createGame(0, true);
+      await chessxu.connect(player2).joinGame(1);
+      
+      // Black tries to move on White's turn
+      await expect(
+        chessxu.connect(player2).submitMove(1, "e7-e5", "dummyState")
+      ).to.be.revertedWithCustomError(chessxu, "NotYourTurn");
+    });
   });
 });
