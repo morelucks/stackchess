@@ -1,43 +1,27 @@
-require("@nomicfoundation/hardhat-toolbox");
-require("dotenv").config();
+import hardhatToolboxMochaEthersPlugin from "@nomicfoundation/hardhat-toolbox-mocha-ethers";
+import { defineConfig } from "hardhat/config";
 
-/** @type import('hardhat/config').HardhatUserConfig */
-module.exports = {
-  solidity: "0.8.24",
+export default defineConfig({
+  plugins: [hardhatToolboxMochaEthersPlugin],
+  solidity: {
+    profiles: {
+      default: {
+        version: "0.8.24",
+      },
+    },
+  },
   networks: {
     alfajores: {
+      type: "http",
+      chainType: "l1",
       url: "https://alfajores-forno.celo-testnet.org",
       accounts: process.env.PRIVATE_KEY ? [process.env.PRIVATE_KEY] : [],
-      chainId: 44787,
     },
     celo: {
+      type: "http",
+      chainType: "l1",
       url: "https://forno.celo.org",
       accounts: process.env.PRIVATE_KEY ? [process.env.PRIVATE_KEY] : [],
-      chainId: 42220,
     },
   },
-  etherscan: {
-    apiKey: {
-      alfajores: process.env.CELOSCAN_API_KEY || "",
-      celo: process.env.CELOSCAN_API_KEY || "",
-    },
-    customChains: [
-      {
-        network: "alfajores",
-        chainId: 44787,
-        urls: {
-          apiURL: "https://api-alfajores.celoscan.io/api",
-          browserURL: "https://alfajores.celoscan.io",
-        },
-      },
-      {
-        network: "celo",
-        chainId: 42220,
-        urls: {
-          apiURL: "https://api.celoscan.io/api",
-          browserURL: "https://celoscan.io/",
-        },
-      },
-    ],
-  },
-};
+});
