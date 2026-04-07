@@ -209,6 +209,20 @@ describe("chessxu - join-game", () => {
         // stx-transfer? returns (err u1) for insufficient balance
         expect(result).toBeErr(Cl.uint(1)); 
     });
+
+    it("verifies state consistency of a joined game", () => {
+        const wager = 100;
+        simnet.callPublicFn("chessxu", "create-game", [Cl.uint(wager), Cl.bool(true)], wallet_1);
+        simnet.callPublicFn("chessxu", "join-game", [Cl.uint(1)], wallet_2);
+        
+        const res = (simnet.callReadOnlyFn("chessxu", "get-game", [Cl.uint(1)], wallet_1).result as any).value;
+        const game = res.data || res.value;
+        expect(game["is-stx"].type).toBe("true");
+        expect(game["wager"]).toStrictEqual(Cl.uint(wager));
+        expect(game["player-w"].value).toBe(wallet_1);
+        expect(game["player-b"].value.value).toBe(wallet_2);
+        expect(game["status"]).toStrictEqual(Cl.uint(1));
+    });
 });
 
 
