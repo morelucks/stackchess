@@ -26,3 +26,5 @@
 // test: moves in game1 don't affect game2 board
 
 // test: cancel waiting game refunds creator
+
+// test: zero-wager resign completes without ETH transfer
