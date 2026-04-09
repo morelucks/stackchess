@@ -24,3 +24,5 @@
 // test: resolving game1 does not affect game2
 
 // test: moves in game1 don't affect game2 board
+
+// test: cancel waiting game refunds creator
