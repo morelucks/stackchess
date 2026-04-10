@@ -36,3 +36,5 @@
 // test: getLastGameId tracks across many games
 
 // test: multi-move sequence board state integrity
+
+// test: full e2e native game with moves then owner resolution
