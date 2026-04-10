@@ -30,3 +30,5 @@
 // test: zero-wager resign completes without ETH transfer
 
 // test: cannot submit move after resolution
+
+// test: cannot resign after resolution
