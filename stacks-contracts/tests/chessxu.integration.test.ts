@@ -15,3 +15,4 @@
 // test: five sequential games have correct IDs
 // test: cancel waiting game refunds creator
 // test: zero-wager resign completes cleanly
+// test: cannot submit move after resolution
