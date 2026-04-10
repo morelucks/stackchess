@@ -32,3 +32,5 @@
 // test: cannot submit move after resolution
 
 // test: cannot resign after resolution
+
+// test: getLastGameId tracks across many games
