@@ -382,9 +382,10 @@ export const useStacksChess = () => {
     isGameActive,
     isWaitingForOpponent,
     getWagerDisplay,
+    isMyTurn,
+    getOpponentAddress,
     getWinProbability,
     formatElo,
-    handleContractError,
-    resolveGame
+    handleContractError
   };
 };
