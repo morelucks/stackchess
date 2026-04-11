@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useOnChainGame } from '../chess/hooks/useOnChainGame';
+import { useStacksChess } from '../hooks/useStacksChess';
 
 interface Props { onClose: () => void; }
 
