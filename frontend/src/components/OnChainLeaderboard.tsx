@@ -35,7 +35,6 @@ function PlayerRow({ address, rank }: PlayerRowProps) {
 export default function OnChainLeaderboard() {
   const { globalStats, loading, refetch } = useGlobalStats();
   const address = useAppStore((s) => s.address);
-  useExpectedScore(address ?? '', address ?? '');
 
   return (
     <div className="onchain-lb">
