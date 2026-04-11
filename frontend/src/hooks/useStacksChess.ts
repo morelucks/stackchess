@@ -149,5 +149,24 @@ export const useStacksChess = () => {
     }
   };
 
-  return { address, network, createGame, joinGame, submitMove, resign, getGame };
+  const getLastGameId = async () => {
+    const options = {
+      contractAddress: CONTRACT_ADDRESS,
+      contractName: CONTRACT_NAME,
+      functionName: 'get-last-game-id',
+      functionArgs: [],
+      network,
+      senderAddress: address || CONTRACT_ADDRESS,
+    };
+
+    try {
+      const result = await fetchCallReadOnlyFunction(options);
+      return Number(cvToValue(result));
+    } catch (e) {
+      console.error('Error fetching last game ID:', e);
+      return 0;
+    }
+  };
+
+  return { address, network, createGame, joinGame, submitMove, resign, getGame, getLastGameId };
 };
