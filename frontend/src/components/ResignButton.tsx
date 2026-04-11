@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { useStacksChess } from '../hooks/useStacksChess';
 import useAppStore from '../zustand/store';
 import './ResignButton.css';
