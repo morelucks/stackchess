@@ -187,6 +187,26 @@ export const useStacksChess = () => {
     }
   };
 
+  const getPlayerStats = async (playerAddress: string) => {
+    const options = {
+      contractAddress: LEADERBOARD_ADDRESS,
+      contractName: LEADERBOARD_NAME,
+      functionName: 'get-player-stats',
+      functionArgs: [principalCV(playerAddress)],
+      network,
+      senderAddress: address || CONTRACT_ADDRESS,
+    };
+
+    try {
+      const result = await fetchCallReadOnlyFunction(options);
+      const val: any = cvToValue(result);
+      return val ? val.value : null;
+    } catch (e) {
+      console.error('Error fetching player stats:', e);
+      return null;
+    }
+  };
+
   return { 
     address, 
     network, 
@@ -196,6 +216,7 @@ export const useStacksChess = () => {
     resign, 
     getGame, 
     getLastGameId,
-    getTokenBalance
+    getTokenBalance,
+    getPlayerStats
   };
 };
