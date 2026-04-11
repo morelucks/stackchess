@@ -10,6 +10,7 @@ import PlayerEloCard from './PlayerEloCard';
 import GameStatusBanner from './GameStatusBanner';
 import ResignButton from './ResignButton';
 import { useGameState } from '../chess/hooks/useGameState';
+import { useStacksChess } from '../hooks/useStacksChess';
 import useAppStore from '../zustand/store';
 import './ChessSidebar.css';
 
