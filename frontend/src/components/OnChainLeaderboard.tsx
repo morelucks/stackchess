@@ -1,4 +1,4 @@
-import { useStacksChess } from '../hooks/useStacksChess';
+import { useGlobalStats, usePlayerStats } from '../hooks/useLeaderboard';
 import useAppStore from '../zustand/store';
 import './OnChainLeaderboard.css';
 
