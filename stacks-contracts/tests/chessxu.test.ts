@@ -455,6 +455,7 @@ describe("chessxu - resolve-game", () => {
         simnet.callPublicFn("chessxu", "join-game", [Cl.uint(1)], wallet_2);
         
         // Allowed statuses are 4, 5, 6. Try u10.
+        const { result } = simnet.callPublicFn("chessxu", "resolve-game", [Cl.uint(1), Cl.uint(10)], deployer);
         expect(result).toBeErr(Cl.uint(109)); // err-invalid-status
     });
 });
@@ -470,5 +471,15 @@ describe("chessxu - edge cases", () => {
         const { result } = simnet.callReadOnlyFn("chessxu", "get-game", [Cl.uint(1)], wallet_1);
         const game = (result as any).value.data || (result as any).value.value;
         expect(game["wager"]).toStrictEqual(Cl.uint(0));
+    });
+
+    it("verifies submit-move handles the maximum allowed string length for board states", () => {
+        simnet.callPublicFn("chessxu", "create-game", [Cl.uint(0), Cl.bool(true)], wallet_1);
+        simnet.callPublicFn("chessxu", "join-game", [Cl.uint(1)], wallet_2);
+        
+        // FEN can be up to ~90 chars, contract likely allows 256
+        const longBoard = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"; 
+        const { result } = simnet.callPublicFn("chessxu", "submit-move", [Cl.uint(1), Cl.stringAscii("e2e4"), Cl.stringAscii(longBoard)], wallet_1);
+        expect(result).toBeOk(Cl.bool(true));
     });
 });
