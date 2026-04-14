@@ -381,4 +381,12 @@ describe("chessxu - resign", () => {
         game = res.data || res.value;
         expect(game["status"]).toStrictEqual(Cl.uint(3)); // Black resigned
     });
+
+    it("reverts if trying to resign from a game that is not Ongoing (err-not-ongoing)", () => {
+        simnet.callPublicFn("chessxu", "create-game", [Cl.uint(0), Cl.bool(true)], wallet_1);
+        
+        // Game is u0 (Waiting). Resign should fail.
+        const { result } = simnet.callPublicFn("chessxu", "resign", [Cl.uint(1)], wallet_1);
+        expect(result).toBeErr(Cl.uint(108)); // err-game-not-active
+    });
 });
