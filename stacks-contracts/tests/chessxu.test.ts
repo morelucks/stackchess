@@ -505,7 +505,30 @@ describe("chessxu - edge cases", () => {
         simnet.callPublicFn("chessxu", "resolve-game", [Cl.uint(1), Cl.uint(4)], deployer);
         
         // Second resolution attempt
-        const { result } = simnet.callPublicFn("chessxu", "resolve-game", [Cl.uint(1), Cl.uint(5)], deployer);
         expect(result).toBeErr(Cl.uint(109)); // err-invalid-status (because status is already u4)
+    });
+});
+
+describe("chessxu - integration flows", () => {
+    it("completes a full match flow: Create -> Join -> Move -> Resign", () => {
+        const wager = 100;
+        setupGame(wager, true, 2);
+        const gameId = 1;
+        
+        // White moves
+        simnet.callPublicFn("chessxu", "submit-move", [Cl.uint(gameId), Cl.stringAscii("e2e4"), Cl.stringAscii("...")], wallet_1);
+        // Black moves
+        simnet.callPublicFn("chessxu", "submit-move", [Cl.uint(gameId), Cl.stringAscii("e7e5"), Cl.stringAscii("...")], wallet_2);
+        
+        // White resigns
+        const { events } = simnet.callPublicFn("chessxu", "resign", [Cl.uint(gameId)], wallet_1);
+        
+        // Winner is Black (wallet_2). Prize is 200.
+        const transfer = events.find(e => e.event === "stx_transfer_event")!;
+        expect(transfer.data.recipient).toBe(wallet_2);
+        expect(transfer.data.amount).toBe("200");
+        
+        const game = getGame(gameId);
+        expect(game["status"]).toStrictEqual(Cl.uint(2)); // White resigned
     });
 });
