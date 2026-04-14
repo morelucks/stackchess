@@ -577,4 +577,21 @@ describe("chessxu - integration flows", () => {
         expect(g1["wager"]).toStrictEqual(Cl.uint(100));
         expect(g2["wager"]).toStrictEqual(Cl.uint(200));
     });
+
+    it("verifies accurate escrow balance across multiple simultaneous games", () => {
+        setupGame(1000, true, 2); // Game 1: 2000 STX locked
+        setupGame(5000, true, 2); // Game 2: 10000 STX locked
+        
+        // Total locked should be 12000
+        // We can't easily check 'contract balance' in simnet directly through events of a separate call,
+        // but we can verify that resolve-game for Game 1 transfers 2000 and Game 2 transfers 10000.
+        const res1 = simnet.callPublicFn("chessxu", "resolve-game", [Cl.uint(3), Cl.uint(4)], deployer);
+        const res2 = simnet.callPublicFn("chessxu", "resolve-game", [Cl.uint(4), Cl.uint(4)], deployer);
+        
+        const transfer1 = res1.events.find(e => e.event === "stx_transfer_event")!;
+        const transfer2 = res2.events.find(e => e.event === "stx_transfer_event")!;
+        
+        expect(transfer1.data.amount).toBe("2000");
+        expect(transfer2.data.amount).toBe("10000");
+    });
 });
