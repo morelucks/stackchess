@@ -341,4 +341,18 @@ describe("chessxu - resign", () => {
         expect(transfer!.data.recipient).toBe(wallet_2);
         expect(transfer!.data.amount).toBe(`${2 * wager}`);
     });
+
+    it("successfully allows Player 2 to resign and awards prize to Player 1 (STX)", () => {
+        const wager = 1000;
+        simnet.callPublicFn("chessxu", "create-game", [Cl.uint(wager), Cl.bool(true)], wallet_1);
+        simnet.callPublicFn("chessxu", "join-game", [Cl.uint(1)], wallet_2);
+        
+        const { events } = simnet.callPublicFn("chessxu", "resign", [Cl.uint(1)], wallet_2);
+        
+        // Winner is wallet_1. Prize should be 2 * wager.
+        const transfer = events.find(e => e.event === "stx_transfer_event");
+        expect(transfer).toBeDefined();
+        expect(transfer!.data.recipient).toBe(wallet_1);
+        expect(transfer!.data.amount).toBe(`${2 * wager}`);
+    });
 });
