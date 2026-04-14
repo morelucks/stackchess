@@ -422,4 +422,23 @@ describe("chessxu - resolve-game", () => {
         expect(transfer!.data.recipient).toBe(wallet_2);
         expect(transfer!.data.amount).toBe(`${2 * wager}`);
     });
+
+    it("successfully allows the owner to resolve a game as a draw/refund (STX)", () => {
+        const wager = 1000;
+        simnet.callPublicFn("chessxu", "create-game", [Cl.uint(wager), Cl.bool(true)], wallet_1);
+        simnet.callPublicFn("chessxu", "join-game", [Cl.uint(1)], wallet_2);
+        
+        // Status u6 - Draw / Refund
+        const { events } = simnet.callPublicFn("chessxu", "resolve-game", [Cl.uint(1), Cl.uint(6)], deployer);
+        
+        // We expect two stx-transfer events, one to each player
+        const transfers = events.filter(e => e.event === "stx_transfer_event");
+        expect(transfers.length).toBe(2);
+        
+        const recipients = transfers.map(t => t.data.recipient);
+        expect(recipients).toContain(wallet_1);
+        expect(recipients).toContain(wallet_2);
+        
+        transfers.forEach(t => expect(t.data.amount).toBe(`${wager}`));
+    });
 });
