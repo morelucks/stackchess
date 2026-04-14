@@ -355,4 +355,12 @@ describe("chessxu - resign", () => {
         expect(transfer!.data.recipient).toBe(wallet_1);
         expect(transfer!.data.amount).toBe(`${2 * wager}`);
     });
+
+    it("reverts if a non-player attempts to resign (err-not-a-player)", () => {
+        simnet.callPublicFn("chessxu", "create-game", [Cl.uint(0), Cl.bool(true)], wallet_1);
+        simnet.callPublicFn("chessxu", "join-game", [Cl.uint(1)], wallet_2);
+        
+        const { result } = simnet.callPublicFn("chessxu", "resign", [Cl.uint(1)], wallet_3);
+        expect(result).toBeErr(Cl.uint(105)); // err-not-a-player
+    });
 });
