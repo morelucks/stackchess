@@ -42,7 +42,7 @@ export function useMiniPayAccess() {
 
     setIsRefreshingBalance(true);
     try {
-      const balance = await celoService.getStableTokenBalance(address, CELO_CONFIG.CUSD_ADDRESS);
+      const balance = await celoService.getStableTokenBalance(address as `0x${string}`, CELO_CONFIG.CUSD_ADDRESS);
       const formatted = formatUnits(balance, 18);
       setCusdBalance(formatted);
       return formatted;

@@ -41,6 +41,7 @@ import {
 import { celo } from 'viem/chains';
 import { CELO_CONFIG, CELO_FEE_CURRENCIES } from '../blockchainConstants';
 import { CHESSXU_ABI } from './contractAbi';
+import { selectSupportedFeeCurrency } from '../../utils/feeCurrency';
 
 /**
  * Service to handle all Celo blockchain interactions
@@ -106,18 +107,38 @@ const celoService = {
   },
   
   /**
-   * Returns common transaction options for MiniPay compatibility
+   * Returns common transaction options for MiniPay compatibility.
+   * Uses robust fee-currency selection when MiniPay is detected.
    */
   getTxOptions: () => {
-    const provider = celoService.getProvider();
-    const isMiniPay = provider?.isMiniPay;
-    if (isMiniPay) {
-      return {
-        type: 'legacy' as const,
-        feeCurrency: CELO_CONFIG.CUSD_ADDRESS as `0x${string}`,
-      };
+    if (celoService.isMiniPay()) {
+      return { type: 'legacy' as const };
     }
     return {};
+  },
+
+  /**
+   * Selects the best fee currency for a given transaction using gas estimation.
+   * Falls back to undefined (native CELO gas) on non-MiniPay wallets.
+   */
+  selectFeeCurrency: async (
+    account: `0x${string}`,
+    to: `0x${string}`,
+    data?: `0x${string}`,
+    value?: bigint,
+  ): Promise<`0x${string}` | undefined> => {
+    try {
+      return await selectSupportedFeeCurrency({
+        publicClient: celoService.publicClient,
+        account,
+        to,
+        data,
+        value,
+      });
+    } catch {
+      // Fall back to native CELO gas if no stablecoin has enough for fees
+      return undefined;
+    }
   },
 
   isMiniPay: () => {
@@ -187,6 +208,10 @@ const celoService = {
     return true;
   },
 
+  /**
+   * @deprecated Use selectFeeCurrency() instead for gas-estimated selection.
+   * Kept for backward compatibility.
+   */
   getSupportedFeeCurrency: async (address: `0x${string}`) => {
     for (const currency of CELO_FEE_CURRENCIES) {
       try {
@@ -232,20 +257,21 @@ const celoService = {
     const walletClient = celoService.getWalletClient();
     const account = address as `0x${string}`;
     const amount = parseUnits(CELO_CONFIG.DAILY_ACCESS_CUSD, 18);
+    const cusdAddr = CELO_CONFIG.CUSD_ADDRESS as `0x${string}`;
     const data = encodeFunctionData({
       abi: erc20Abi,
       functionName: 'transfer',
       args: [CELO_CONFIG.PAYMENT_RECIPIENT as `0x${string}`, amount],
     });
 
-    const feeCurrency = await celoService.getSupportedFeeCurrency(account);
+    const feeCurrency = await celoService.selectFeeCurrency(account, cusdAddr, data);
 
     return walletClient.sendTransaction({
       account,
-      to: CELO_CONFIG.CUSD_ADDRESS as `0x${string}`,
+      to: cusdAddr,
       data,
-      feeCurrency,
-      ...(celoService.isMiniPay() ? { type: 'legacy' as const } : {}),
+      ...(feeCurrency ? { feeCurrency } : {}),
+      ...celoService.getTxOptions(),
     });
   },
 
@@ -305,14 +331,25 @@ const celoService = {
   createGame: async (wagerInEth: string, isNative: boolean) => {
     const walletClient = celoService.getWalletClient();
     const [address] = await walletClient.requestAddresses();
-    
+    const contractAddr = celoService.getContractAddress();
+    const value = isNative ? parseEther(wagerInEth) : 0n;
+
+    const data = encodeFunctionData({
+      abi: CHESSXU_ABI,
+      functionName: 'createGame',
+      args: [BigInt(parseEther(wagerInEth)), isNative],
+    });
+
+    const feeCurrency = await celoService.selectFeeCurrency(address, contractAddr, data, value);
+
     return await walletClient.writeContract({
-      address: celoService.getContractAddress(),
+      address: contractAddr,
       abi: CHESSXU_ABI,
       functionName: 'createGame',
       args: [BigInt(parseEther(wagerInEth)), isNative],
       account: address,
-      value: isNative ? parseEther(wagerInEth) : 0n,
+      value,
+      ...(feeCurrency ? { feeCurrency } : {}),
       ...celoService.getTxOptions(),
     });
   },
@@ -326,14 +363,25 @@ const celoService = {
   joinGame: async (gameId: number, wagerInEth: string, isNative: boolean) => {
     const walletClient = celoService.getWalletClient();
     const [address] = await walletClient.requestAddresses();
+    const contractAddr = celoService.getContractAddress();
+    const value = isNative ? parseEther(wagerInEth) : 0n;
+
+    const data = encodeFunctionData({
+      abi: CHESSXU_ABI,
+      functionName: 'joinGame',
+      args: [BigInt(gameId)],
+    });
+
+    const feeCurrency = await celoService.selectFeeCurrency(address, contractAddr, data, value);
 
     return await walletClient.writeContract({
-      address: celoService.getContractAddress(),
+      address: contractAddr,
       abi: CHESSXU_ABI,
       functionName: 'joinGame',
       args: [BigInt(gameId)],
       account: address,
-      value: isNative ? parseEther(wagerInEth) : 0n,
+      value,
+      ...(feeCurrency ? { feeCurrency } : {}),
       ...celoService.getTxOptions(),
     });
   },
@@ -347,13 +395,23 @@ const celoService = {
   submitMove: async (gameId: number, moveStr: string, boardState: string) => {
     const walletClient = celoService.getWalletClient();
     const [address] = await walletClient.requestAddresses();
+    const contractAddr = celoService.getContractAddress();
+
+    const data = encodeFunctionData({
+      abi: CHESSXU_ABI,
+      functionName: 'submitMove',
+      args: [BigInt(gameId), moveStr, boardState],
+    });
+
+    const feeCurrency = await celoService.selectFeeCurrency(address, contractAddr, data);
 
     return await walletClient.writeContract({
-      address: celoService.getContractAddress(),
+      address: contractAddr,
       abi: CHESSXU_ABI,
       functionName: 'submitMove',
       args: [BigInt(gameId), moveStr, boardState],
       account: address,
+      ...(feeCurrency ? { feeCurrency } : {}),
       ...celoService.getTxOptions(),
     });
   },
@@ -365,13 +423,23 @@ const celoService = {
   resign: async (gameId: number) => {
     const walletClient = celoService.getWalletClient();
     const [address] = await walletClient.requestAddresses();
+    const contractAddr = celoService.getContractAddress();
+
+    const data = encodeFunctionData({
+      abi: CHESSXU_ABI,
+      functionName: 'resign',
+      args: [BigInt(gameId)],
+    });
+
+    const feeCurrency = await celoService.selectFeeCurrency(address, contractAddr, data);
 
     return await walletClient.writeContract({
-      address: celoService.getContractAddress(),
+      address: contractAddr,
       abi: CHESSXU_ABI,
       functionName: 'resign',
       args: [BigInt(gameId)],
       account: address,
+      ...(feeCurrency ? { feeCurrency } : {}),
       ...celoService.getTxOptions(),
     });
   },
