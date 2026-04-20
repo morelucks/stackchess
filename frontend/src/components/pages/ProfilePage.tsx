@@ -196,3 +196,25 @@ export default function ProfilePage() {
                   target="_blank"
                   rel="noopener noreferrer"
                   className="profile-scan-link"
+                >
+                  <ExternalLink size={13} />
+                </a>
+              </div>
+            )}
+
+            {stacksAddress && (
+              <div className="profile-address-row">
+                <div className="profile-address-label">
+                  <span className="profile-chain-dot" style={{ background: "#F7821B" }} />
+                  Stacks / STX
+                </div>
+                <CopyBadge value={stacksAddress} label="Stacks address" />
+                <a
+                  href={`https://explorer.hiro.so/address/${stacksAddress}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="profile-scan-link"
+                >
+                  <ExternalLink size={13} />
+                </a>
+              </div>
