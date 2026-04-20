@@ -262,3 +262,20 @@ export default function ProfilePage() {
               <span>View on Warpcast</span>
               <ChevronRight size={16} />
             </a>
+          </div>
+        )}
+
+        {/* ── Guest / not connected nudge ── */}
+        {!farcasterUser && !address && (
+          <div className="profile-guest-card">
+            <User size={32} className="text-slate-500 mb-3" />
+            <p className="text-slate-300 font-semibold mb-1">No profile found</p>
+            <p className="text-slate-500 text-sm">
+              Open Chessxu inside Warpcast or connect a wallet to see your profile here.
+            </p>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
