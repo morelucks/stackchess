@@ -118,3 +118,33 @@
 .profile-identity {
   display: flex;
   flex-direction: column;
+  align-items: center;
+  gap: 0.2rem;
+}
+
+.profile-display-name {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #fff;
+  letter-spacing: -0.02em;
+  margin: 0;
+}
+
+.profile-username {
+  font-size: 0.875rem;
+  color: rgba(139, 92, 246, 0.9);
+  margin: 0;
+}
+
+.profile-fid-row {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.75rem;
+  color: rgba(255,255,255,0.4);
+  margin-top: 0.2rem;
+}
+
+.profile-fid-link {
+  display: flex;
+  align-items: center;
