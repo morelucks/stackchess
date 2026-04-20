@@ -174,3 +174,25 @@ export default function ProfilePage() {
             value={address ? shortenAddr(address) : "Not connected"}
             accent="#34d399"
           />
+        </div>
+
+        {/* ── Wallet Addresses ── */}
+        <div className="profile-section-card">
+          <div className="profile-section-header">
+            <Wallet size={16} className="text-indigo-400" />
+            <h2 className="profile-section-title">Wallet Addresses</h2>
+          </div>
+
+          <div className="profile-address-list">
+            {celoAddress && (
+              <div className="profile-address-row">
+                <div className="profile-address-label">
+                  <span className="profile-chain-dot" style={{ background: "#FCFF52" }} />
+                  Celo / EVM
+                </div>
+                <CopyBadge value={celoAddress} label="Celo address" />
+                <a
+                  href={`https://celoscan.io/address/${celoAddress}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="profile-scan-link"
