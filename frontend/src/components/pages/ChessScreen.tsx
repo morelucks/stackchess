@@ -35,7 +35,6 @@ export default function ChessScreen() {
   const activeChain = useAppStore((state) => state.activeChain);
   const activeGameId = useAppStore((state) => state.activeGameId);
   const isFarcaster = useAppStore((state) => state.isFarcaster);
-  const farcasterUser = useAppStore((state) => state.farcasterUser);
   const { hasAccess, expiresAt, requiresAccess } = useMiniPayAccess();
   const { gameState } = useGameState(activeGameId);
   const [currentGameMode, setCurrentGameMode] = useState('pvc');
