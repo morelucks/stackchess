@@ -64,3 +64,25 @@ function StatCard({
   label: string;
   value: string | number;
   accent: string;
+}) {
+  return (
+    <div className="profile-stat-card" style={{ "--accent": accent } as React.CSSProperties}>
+      <div className="profile-stat-icon">{icon}</div>
+      <div className="profile-stat-body">
+        <p className="profile-stat-label">{label}</p>
+        <p className="profile-stat-value">{value}</p>
+      </div>
+    </div>
+  );
+}
+
+// ─── Main Component ──────────────────────────────────────────────────────────
+
+export default function ProfilePage() {
+  const farcasterUser = useAppStore((s) => s.farcasterUser);
+  const address = useAppStore((s) => s.address);
+  const celoAddress = useAppStore((s) => s.celoAddress);
+  const stacksAddress = useAppStore((s) => s.stacksAddress);
+  const activeChain = useAppStore((s) => s.activeChain);
+  const elo = useAppStore((s) => s.elo);
+  const chessBalance = useAppStore((s) => s.chessBalance);
