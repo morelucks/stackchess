@@ -130,3 +130,25 @@ export default function ProfilePage() {
                     target="_blank"
                     rel="noopener noreferrer"
                     className="profile-fid-link"
+                  >
+                    Warpcast <ExternalLink size={11} />
+                  </a>
+                )}
+              </div>
+            )}
+          </div>
+
+          {/* Rank pill */}
+          <div
+            className="profile-rank-pill"
+            style={{ backgroundColor: `${rank.color}20`, color: rank.color, borderColor: `${rank.color}40` }}
+          >
+            <Crown size={13} />
+            {rank.label}
+          </div>
+        </div>
+
+        {/* ── Stats Grid ── */}
+        <div className="profile-stats-grid">
+          <StatCard
+            icon={<TrendingUp size={18} />}
