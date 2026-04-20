@@ -1,6 +1,6 @@
 // Import the chess components
 import ChessGameWrapper from "../ChessGameWrapper";
-import { useState, useEffect } from "react";
+
 import { useNavigate } from "react-router-dom";
 import useAppStore from "../../zustand/store";
 import { useWalletAuth } from "../../hooks/useWalletAuth";
@@ -37,23 +37,6 @@ export default function ChessScreen() {
   const isFarcaster = useAppStore((state) => state.isFarcaster);
   const { hasAccess, expiresAt, requiresAccess } = useMiniPayAccess();
   const { gameState } = useGameState(activeGameId);
-  const [currentGameMode, setCurrentGameMode] = useState('pvc');
-
-  useEffect(() => {
-    const handleStorageChange = () => {
-      const gameMode = localStorage.getItem('currentGameMode') || 'pvc';
-      setCurrentGameMode(gameMode);
-    };
-
-    handleStorageChange();
-    window.addEventListener('storage', handleStorageChange);
-    const interval = setInterval(handleStorageChange, 1000);
-
-    return () => {
-      window.removeEventListener('storage', handleStorageChange);
-      clearInterval(interval);
-    };
-  }, []);
 
   const activeStatus =
     gameState && typeof gameState === "object" && "status" in gameState
