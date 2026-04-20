@@ -240,3 +240,25 @@ export default function ProfilePage() {
                 <p className="profile-fc-val">#{farcasterUser.fid}</p>
               </div>
               {farcasterUser.username && (
+                <div className="profile-fc-field">
+                  <p className="profile-fc-key">Username</p>
+                  <p className="profile-fc-val">@{farcasterUser.username}</p>
+                </div>
+              )}
+              {farcasterUser.displayName && (
+                <div className="profile-fc-field">
+                  <p className="profile-fc-key">Display Name</p>
+                  <p className="profile-fc-val">{farcasterUser.displayName}</p>
+                </div>
+              )}
+            </div>
+
+            <a
+              href={`https://warpcast.com/${farcasterUser.username || ""}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="profile-warpcast-btn"
+            >
+              <span>View on Warpcast</span>
+              <ChevronRight size={16} />
+            </a>
