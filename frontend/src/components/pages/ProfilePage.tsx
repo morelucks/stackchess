@@ -42,3 +42,25 @@ function CopyBadge({ value, label }: { value: string; label: string }) {
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
     });
+  };
+
+  return (
+    <div className="profile-copy-badge" onClick={copy} title={`Copy ${label}`}>
+      <span className="profile-copy-value">{shortenAddr(value)}</span>
+      <span className="profile-copy-icon">
+        {copied ? <CheckCheck size={13} className="text-emerald-400" /> : <Copy size={13} />}
+      </span>
+    </div>
+  );
+}
+
+function StatCard({
+  icon,
+  label,
+  value,
+  accent,
+}: {
+  icon: React.ReactNode;
+  label: string;
+  value: string | number;
+  accent: string;
