@@ -2,7 +2,7 @@ import { useNavigate } from "react-router-dom";
 import { useWalletAuth } from "../../hooks/useWalletAuth";
 import useAppStore from "../../zustand/store";
 
-import { Wallet, Sword } from "lucide-react";
+import { Wallet, Sword, Users } from "lucide-react";
 import { useState } from "react";
 import { useStacksChess } from "../../hooks/useStacksChess";
 import { useCeloChess } from "../../hooks/useCeloChess";
@@ -21,7 +21,9 @@ export default function PvPScreen() {
   const { hasAccess, requiresAccess } = useMiniPayAccess();
 
   const [wager, setWager] = useState("0");
+  const [idToJoin, setIdToJoin] = useState("");
   const [isCreatingMatch, setIsCreatingMatch] = useState(false);
+  const [isJoiningMatch, setIsJoiningMatch] = useState(false);
 
   const handleCreateMatch = () => {
     if (!isConnected) {
@@ -51,6 +53,40 @@ export default function PvPScreen() {
           navigate("/");
         })
         .catch(() => setIsCreatingMatch(false));
+    }
+  };
+
+  const handleJoinMatch = () => {
+    if (!isConnected) {
+      connect();
+      return;
+    }
+
+    if (activeChain === 'celo' && requiresAccess && !hasAccess) {
+      return;
+    }
+
+    const gameId = Number.parseInt(idToJoin, 10);
+    if (!Number.isInteger(gameId) || gameId <= 0) {
+      return;
+    }
+
+    setIsJoiningMatch(true);
+    
+    if (activeChain === 'celo') {
+      celo.joinGame(gameId, "0", true)
+        .then(() => {
+          setIsJoiningMatch(false);
+          navigate("/");
+        })
+        .catch(() => setIsJoiningMatch(false));
+    } else {
+      stacks.joinGame(gameId, 0, true)
+        .then(() => {
+          setIsJoiningMatch(false);
+          navigate("/");
+        })
+        .catch(() => setIsJoiningMatch(false));
     }
   };
 
@@ -118,6 +154,40 @@ export default function PvPScreen() {
                                   : isCreatingMatch
                                     ? "Broadcasting..."
                                     : "Create Game"}
+                            </button>
+                        </div>
+                    </div>
+
+                    {/* Join Game */}
+                    <div className="p-6 rounded-2xl border border-white/5 bg-white/5 hover:bg-white/10 transition flex flex-col gap-4 group">
+                        <div className="w-10 h-10 rounded-xl bg-blue-500/20 flex items-center justify-center text-blue-400 group-hover:scale-110 transition">
+                             <Users size={24} />
+                        </div>
+                        <div>
+                            <h3 className="text-xl font-bold">Join Match</h3>
+                            <p className="text-sm text-slate-400">Join an existing match by ID.</p>
+                        </div>
+                        <div className="mt-2 space-y-3">
+                            <div>
+                                <label className="text-[10px] text-slate-500 uppercase tracking-widest block mb-1">Game ID</label>
+                                <input 
+                                    type="text"
+                                    value={idToJoin}
+                                    onChange={(e) => setIdToJoin(e.target.value)}
+                                    className="w-full bg-slate-900 border border-white/10 rounded-xl p-4 text-sm focus:ring-2 focus:ring-blue-500 outline-none transition"
+                                    placeholder="Match ID"
+                                />
+                            </div>
+                            <button 
+                                onClick={handleJoinMatch}
+                                disabled={isJoiningMatch || !idToJoin.trim() || (activeChain === 'celo' && requiresAccess && !hasAccess)}
+                                className="w-full py-4 border border-blue-500/50 hover:bg-blue-500/10 rounded-xl font-bold active:scale-95 transition disabled:opacity-60"
+                            >
+                                {activeChain === 'celo' && requiresAccess && !hasAccess
+                                  ? "Unlock Access First"
+                                  : isJoiningMatch
+                                    ? "Joining..."
+                                    : "Join Match"}
                             </button>
                         </div>
                     </div>
